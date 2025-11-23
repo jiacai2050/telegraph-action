@@ -1,0 +1,33 @@
+name: Telegraph Action
+description: A GitHub Action to create a Telegraph post from a markdown file.
+
+inputs:
+  token:
+    description: Telegraph access token
+    required: true
+  title:
+    description: Title of the telegraph post
+    required: true
+  md-file:
+    description: Markdown file send to telegraph
+    required: true
+  author-name:
+    description: Name of the author
+    required: false
+    default: GitHub Actions
+  author-url:
+    description: URL of the author
+    required: false
+    default: ""
+
+outputs:
+  url:
+    description: URL of the created telegraph post
+  title:
+    description: Title of the created telegraph post
+  description:
+    description: Description of the created telegraph post
+
+runs:
+  using: node20
+  main: dist/index.js
