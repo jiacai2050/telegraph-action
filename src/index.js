@@ -12,7 +12,7 @@ try {
     authorName: core.getInput("author-name"),
   });
   core.info(`Create page result: ${resp}`);
-  for (const key of ["title", "url"]) {
+  for (const key of ["title", "url", "path"]) {
     core.setOutput(key, resp[key]);
   }
 } catch (error) {

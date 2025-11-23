@@ -9,7 +9,7 @@ inputs:
     description: Title of the telegraph post
     required: true
   md-file:
-    description: Markdown file send to telegraph
+    description: The path to the Markdown file to be published.
     required: true
   author-name:
     description: Name of the author
