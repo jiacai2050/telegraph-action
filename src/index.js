@@ -11,9 +11,16 @@ try {
     authorUrl: core.getInput("author-url"),
     authorName: core.getInput("author-name"),
   });
-  core.info(`Create page result: ${resp}`);
-  for (const key of ["title", "url"]) {
-    core.setOutput(key, resp[key]);
+  core.info(`Create page result: ${JSON.stringify(resp)}`);
+  for (const key of [
+    "title",
+    "url",
+    "path",
+    "description",
+    "views",
+    "can_edit",
+  ]) {
+    core.setOutput(key, resp.result[key]);
   }
 } catch (error) {
   core.setFailed(error.message);
