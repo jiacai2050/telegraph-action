@@ -13,21 +13,36 @@ A GitHub Action for publishing articles to Telegraph (telegra.ph) directly from 
 - `url`: The URL of the published article on Telegraph.
 - `path`: The path of the published article on Telegraph.
 - `title`: The title of the published article.
+- `description`: A brief description or excerpt from the article.
 
 ## Example Usage
 ```yaml
 name: Publish to Telegraph
+
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-  steps:
-    - name: Publish Article
-      use: jiacai2050/telegraph-action@v1
-      with:
-        token: ${{ secrets.TELEGRAPH_TOKEN }}
-        title: "My First Telegraph Article"
-        md-file: "articles/my-article.md"
-        author-name: "John Doe"
-        author-url: "https://johndoe.com"
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Publish Article
+        uses: jiacai2050/telegraph-action@v1
+        id: telegraph
+        with:
+          token: ${{ secrets.TELEGRAPH_TOKEN }}
+          title: "My First Telegraph Article"
+          md-file: "Readme.md"
+          author-name: "John Doe"
+          author-url: "https://johndoe.com"
+      - name: Output Result
+        run: |
+          echo "Telegraph Post URL: ${{ steps.telegraph.outputs.url }}"
+          echo "Title: ${{ steps.telegraph.outputs.title }}"
+          echo "Description: ${{ steps.telegraph.outputs.description }}"
+          echo "Path: ${{ steps.telegraph.outputs.path }}"
 ```
