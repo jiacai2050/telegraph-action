@@ -1,4 +1,4 @@
-name: Sync v1 tag
+name: Sync Major Tag
 on:
   release:
     types: [published]
@@ -7,13 +7,16 @@ jobs:
   sync-tag:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v1.')
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Fetch all history for all tags
 
       - name: Sync v1 tag
         run: |
-          git tag -d v1 || true
-          git tag v1 ${{ github.ref_name }}  # Link v1 tag to the new v1.x.y tag
-          git push origin v1 --force-with-lease
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -f v1 ${{ github.ref_name }}
+          git push origin v1 --force
