@@ -187,5 +187,10 @@ export async function createTelegraphPage(
     throw new Error(`Create Telegraph page failed: ${await response.text()}`);
   }
 
-  return await response.json();
+  const ret = await response.json();
+  if (ret.ok) {
+    return ret.result;
+  }
+
+  throw new Error(`Create Telegraph page error: ${ret.error}`);
 }

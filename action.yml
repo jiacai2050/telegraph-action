@@ -10,7 +10,10 @@ inputs:
     required: true
   md-file:
     description: The path to the Markdown file to be published.
-    required: true
+    required: false
+  md-body:
+    description: The Markdown content to be published directly.
+    required: false
   author-name:
     description: Name of the author
     required: false

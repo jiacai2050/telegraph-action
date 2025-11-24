@@ -5,8 +5,18 @@ import { createTelegraphPage } from "./api.js";
 try {
   const token = core.getInput("token");
   const mdFile = core.getInput("md-file");
+  const mdBody = core.getInput("md-body");
   const title = core.getInput("title");
-  const mdContent = fs.readFileSync(mdFile, { encoding: "utf8" });
+
+  let mdContent = "";
+  if (mdBody) {
+    mdContent = mdBody;
+  } else if (mdFile) {
+    mdContent = fs.readFileSync(mdFile, { encoding: "utf8" });
+  } else {
+    throw new Error("Either md-file or md-body must be provided.");
+  }
+
   const resp = await createTelegraphPage(token, title, mdContent, {
     authorUrl: core.getInput("author-url"),
     authorName: core.getInput("author-name"),
@@ -20,7 +30,7 @@ try {
     "views",
     "can_edit",
   ]) {
-    core.setOutput(key, resp.result[key]);
+    core.setOutput(key, resp[key]);
   }
 } catch (error) {
   core.setFailed(error.message);
