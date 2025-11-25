@@ -1,14 +1,18 @@
 # Telegraph Action
 
-A GitHub Action for publishing articles to Telegraph (telegra.ph) directly from your repository.
+A GitHub Action for publishing articles to [Telegraph](https://telegra.ph) directly from your repository.
 
 ## Parameters
 - `token`: The access token for the Telegraph account. If you don't have one, you can create a new Telegraph account to obtain a token. See [Telegraph API Documentation](https://telegra.ph/api) for more details.
 - `title`: The title of the article.
-- `md-file`:  The path to the Markdown file to be published. **Either `md-file` or `md-body` must be provided.**
-- `md-body`:  The Markdown content to be published directly. **Either `md-file` or `md-body` must be provided.**
+- `body`:  The content of the telegraph post in markdown format.
+- `body-file`: The path to the markdown file containing the content of the telegraph post. Either `body` or `body-file` must be provided.
 - `author-name`: (Optional) The name of the author.
 - `author-url`: (Optional) The URL of the author.
+- `chat-id`: (Optional) Chat ID to which the URL of the newly created Telegraph post will be sent.
+- `telegram-token`: (Optional) Telegram bot token used to send the Telegraph post URL to the specified chat ID.
+
+You can send the Telegraph post URL to a Telegram chat by providing both the `chat-id` and `telegram-token`. To customize the message sent to Telegram, consider using [telegram-action](https://github.com/jiacai2050/telegram-action).
 
 ## Outputs
 - `url`: The URL of the published article on Telegraph.
@@ -25,7 +29,7 @@ A GitHub Action for publishing articles to Telegraph (telegra.ph) directly from 
   with:
     token: ${{ secrets.TELEGRAPH_TOKEN }}
     title: "My First Telegraph Article"
-    md-file: "README.md"
+    body-file: "README.md"
 ```
 
 ### Publish using body
@@ -35,7 +39,7 @@ A GitHub Action for publishing articles to Telegraph (telegra.ph) directly from 
   with:
     token: ${{ secrets.TELEGRAPH_TOKEN }}
     title: "My First Telegraph Article"
-    md-body: |
+    body: |
       # Hello Telegraph
       This is a post from GitHub Actions!
 ```
@@ -61,7 +65,7 @@ jobs:
         with:
           token: ${{ secrets.TELEGRAPH_TOKEN }}
           title: "My First Telegraph Article"
-          md-file: "README.md"
+          body-file: "README.md"
           author-name: "Telegraph Action"
           author-url: "https://github.com/jiacai2050/telegraph-action"
       - name: Output Result

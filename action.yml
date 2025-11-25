@@ -1,6 +1,10 @@
 name: Telegraph Action
 description: A GitHub Action to create a Telegraph post from a markdown file.
 
+branding:
+  icon: "book"
+  color: "blue"
+
 inputs:
   token:
     description: Telegraph access token
@@ -8,11 +12,11 @@ inputs:
   title:
     description: Title of the telegraph post
     required: true
-  md-file:
-    description: The path to the Markdown file to be published.
+  body:
+    description: The content of the telegraph post in markdown format.
     required: false
-  md-body:
-    description: The Markdown content to be published directly.
+  body-file:
+    description: The path to the markdown file containing the content of the telegraph post.
     required: false
   author-name:
     description: Name of the author
@@ -22,6 +26,12 @@ inputs:
     description: URL of the author
     required: false
     default: ""
+  chat-id:
+    description: Chat ID to which the URL of the newly created Telegraph post will be sent.
+    required: false
+  telegram-token:
+    description: Telegram bot token used to send the Telegraph post URL to the specified chat ID.
+    required: false
 
 outputs:
   url:

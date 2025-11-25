@@ -1,27 +1,41 @@
 import * as core from "@actions/core";
 import fs from "fs";
-import { createTelegraphPage } from "./api.js";
+import { createTelegraphPage, sendTelegramMessage } from "./api.js";
 
 try {
-  const token = core.getInput("token");
-  const mdFile = core.getInput("md-file");
-  const mdBody = core.getInput("md-body");
-  const title = core.getInput("title");
+  await main();
+} catch (error) {
+  core.setFailed(error.message);
+}
 
-  let mdContent = "";
-  if (mdBody) {
-    mdContent = mdBody;
-  } else if (mdFile) {
-    mdContent = fs.readFileSync(mdFile, { encoding: "utf8" });
-  } else {
-    throw new Error("Either md-file or md-body must be provided.");
+async function main() {
+  const token = core.getInput("token");
+  const mdFile = core.getInput("body-file");
+  const mdBody = core.getInput("body");
+  const title = core.getInput("title");
+  const chatId = core.getInput("chat-id");
+  const telegramToken = core.getInput("telegram-token");
+
+  if (chatId && !telegramToken) {
+    throw new Error("telegram-token is required when chat-id is provided.");
   }
 
-  const resp = await createTelegraphPage(token, title, mdContent, {
+  let content;
+  if (mdBody) {
+    content = mdBody;
+  } else if (mdFile) {
+    content = fs.readFileSync(mdFile, { encoding: "utf8" });
+  } else {
+    throw new Error("Either body or body-file must be provided.");
+  }
+
+  const resp = await createTelegraphPage(token, title, content, {
     authorUrl: core.getInput("author-url"),
     authorName: core.getInput("author-name"),
   });
-  core.info(`Create page result: ${JSON.stringify(resp)}`);
+
+  core.debug(`Create page result: ${JSON.stringify(resp)}`);
+
   for (const key of [
     "title",
     "url",
@@ -32,6 +46,13 @@ try {
   ]) {
     core.setOutput(key, resp[key]);
   }
-} catch (error) {
-  core.setFailed(error.message);
+
+  if (!chatId) {
+    core.info("chat-id not provided, skip sending telegram message.");
+    return;
+  }
+
+  core.debug(`Sending telegram message to ${chatId}...`);
+  const msgRet = await sendTelegramMessage(telegramToken, chatId, resp.url);
+  core.debug(`Send telegram message result: ${JSON.stringify(msgRet)}`);
 }

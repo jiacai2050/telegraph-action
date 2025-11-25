@@ -194,3 +194,35 @@ export async function createTelegraphPage(
 
   throw new Error(`Create Telegraph page error: ${ret.error}`);
 }
+
+// https://core.telegram.org/bots/api#sendmessage
+export async function sendTelegramMessage(token, chatId, message) {
+  const url = `https://api.telegram.org/bot${token}/sendMessage`;
+  const payload = {
+    text: message,
+    chat_id: chatId,
+  };
+
+  const resp = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!resp.ok) {
+    throw new Error(
+      `Send message failed: ${await resp.text()}, code: ${resp.status}`,
+    );
+  }
+
+  const ret = await resp.json();
+  if (!ret.ok) {
+    throw new Error(
+      `Send message error: ${ret.description}, code: ${ret.error_code}`,
+    );
+  }
+
+  return ret.result;
+}
